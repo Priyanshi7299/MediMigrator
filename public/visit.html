@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Record Visit</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="container">
+    <h1>Record Patient Visit</h1>
+    
+    <!-- Navigation Back -->
+    <div class="nav">
+      <a href="/index.html">🏠 Back to Dashboard</a>
+    </div>
+
+    <form id="visitForm">
+      <input type="number" name="patient_id" placeholder="Patient ID" required>
+      <input type="date" name="date" required>
+      <input type="text" name="symptoms" placeholder="Symptoms" required>
+      <input type="text" name="diagnosis" placeholder="Diagnosis" required>
+      <input type="text" name="prescription" placeholder="Prescription" required>
+      <input type="text" name="added_by" placeholder="Added By (e.g., Dr. Smith)" required>
+      <button type="submit">Record Visit</button>
+    </form>
+
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    // Set today's date as default
+    document.querySelector('input[name="date"]').valueAsDate = new Date();
+
+    document.getElementById('visitForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target).entries());
+
+      const res = await fetch('/visits', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      document.getElementById('msg').textContent = res.ok ? "Visit recorded successfully!" : "Error: " + result.error;
+      if (res.ok) e.target.reset();
+    });
+  </script>
+</body>
+</html>

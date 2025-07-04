@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Visit History</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="container">
+    <h1>Visit History</h1>
+    
+    <!-- Navigation Back -->
+    <div class="nav">
+      <a href="/index.html">🏠 Back to Dashboard</a>
+    </div>
+
+    <form id="historyForm">
+      <input type="number" name="patient_id" placeholder="Enter Patient ID" required>
+      <button type="submit">Get History</button>
+    </form>
+
+    <table id="visitTable">
+      <thead>
+        <tr><th>Date</th><th>Symptoms</th><th>Diagnosis</th><th>Prescription</th><th>Added By</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <p id="status"></p>
+  </div>
+
+  <script>
+    document.getElementById('historyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = new FormData(e.target).get('patient_id');
+      
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = 'Loading...';
+
+      const res = await fetch(`/patients/${id}/visits`);
+      const visits = await res.json();
+
+      const tbody = document.querySelector('#visitTable tbody');
+      
+      if (visits.length > 0) {
+        tbody.innerHTML = visits.map(v => `
+          <tr>
+            <td>${v.date}</td>
+            <td>${v.symptoms}</td>
+            <td>${v.diagnosis}</td>
+            <td>${v.prescription}</td>
+            <td>${v.added_by}</td>
+          </tr>
+        `).join('');
+        statusEl.textContent = `Found ${visits.length} visit(s) for Patient ID: ${id}`;
+      } else {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">No visits found for this patient</td></tr>';
+        statusEl.textContent = 'No visits found for this patient.';
+      }
+    });
+  </script>
+</body>
+</html>

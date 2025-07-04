@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Patient Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="container">
+    <h1>Patient Dashboard</h1>
+
+    <!-- Navigation Buttons -->
+    <div class="nav">
+      <a href="/add.html">➕ Add Patient</a>
+      <a href="/visit.html">💊 Record Visit</a>
+      <a href="/history.html">📜 Visit History</a>
+    </div>
+
+    <!-- Search Bar -->
+    <form id="searchForm">
+      <input type="text" name="id" placeholder="Search by ID">
+      <input type="text" name="name" placeholder="Or by Name">
+      <button type="submit">Search</button>
+      <button type="button" id="resetBtn">Reset</button>
+    </form>
+
+    <!-- Patients Table -->
+    <table id="patientTable">
+      <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Contact</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const tableBody = document.querySelector('#patientTable tbody');
+    const status = document.getElementById('status');
+
+    async function loadAllPatients() {
+      const res = await fetch('/patients');
+      const data = await res.json();
+      updateTable(data);
+    }
+
+    function updateTable(patients) {
+      tableBody.innerHTML = patients.map(p => `
+        <tr>
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.age}</td>
+          <td>${p.gender}</td>
+          <td>${p.contact}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('searchForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const params = new URLSearchParams(new FormData(e.target)).toString();
+      const res = await fetch('/patients/search?' + params);
+      const data = await res.json();
+
+      if (data.length > 0) {
+        updateTable(data);
+        status.textContent = `Found ${data.length} result(s).`;
+      } else {
+        tableBody.innerHTML = '';
+        status.textContent = 'No matching patients found.';
+      }
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.getElementById('searchForm').reset();
+      status.textContent = '';
+      loadAllPatients(); // Restore original list
+    });
+
+    // Load patients on first page load
+    loadAllPatients();
+  </script>
+</body>
+</html>

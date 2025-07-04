@@ -1,0 +1,104 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <title>Search Patient</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Search Patients</h1>
+  <form id="searchForm">
+    <input type="text" name="id" placeholder="Search by ID">
+    <input type="text" name="name" placeholder="Or by Name">
+    <button type="submit">Search</button>
+  </form>
+
+  <table id="results">
+    <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Contact</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('searchForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const params = new URLSearchParams(new FormData(form)).toString();
+      const res = await fetch('/patients/search?' + params);
+      const patients = await res.json();
+      const tbody = document.querySelector('#results tbody');
+      tbody.innerHTML = patients.map(p => `
+        <tr>
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.age}</td>
+          <td>${p.gender}</td>
+          <td>${p.contact}</td>
+        </tr>
+      `).join('');
+    });
+  </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Patient</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="container">
+    <h1>Search Patients</h1>
+    
+    <!-- Navigation Back -->
+    <div class="nav">
+      <a href="/index.html">🏠 Back to Dashboard</a>
+    </div>
+
+    <form id="searchForm">
+      <input type="text" name="id" placeholder="Search by ID">
+      <input type="text" name="name" placeholder="Or by Name">
+      <button type="submit">Search</button>
+    </form>
+
+    <table id="results">
+      <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Contact</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('searchForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const params = new URLSearchParams(new FormData(form)).toString();
+      
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = 'Searching...';
+      
+      const res = await fetch('/patients/search?' + params);
+      const patients = await res.json();
+      const tbody = document.querySelector('#results tbody');
+      
+      if (patients.length > 0) {
+        tbody.innerHTML = patients.map(p => `
+          <tr>
+            <td>${p.id}</td>
+            <td>${p.name}</td>
+            <td>${p.age}</td>
+            <td>${p.gender}</td>
+            <td>${p.contact}</td>
+          </tr>
+        `).join('');
+        statusEl.textContent = `Found ${patients.length} patient(s).`;
+      } else {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666;">No patients found</td></tr>';
+        statusEl.textContent = 'No patients found matching your search.';
+      }
+    });
+  </script>
+</body>
+</html>
