@@ -1,11 +1,12 @@
 const { Op } = require("sequelize");  // <-- Add this at the top if not already
-
+const validate = require('../middleware/joiValidator');
+const { patientSchema ,searchSchema} = require('./validation');  // <-- Adjust the path as necessary
 
 module.exports = (app) => {
   const { Patient } = require('../models');
 
   // Add new patient
-  app.post('/patients', async (req, res) => {
+  app.post('/patients',validate(patientSchema), async (req, res) => {
     try {
       const patient = await Patient.create(req.body);
       res.json(patient);
@@ -21,15 +22,11 @@ module.exports = (app) => {
   });
 
   // Search patients by ID or name
-  app.get('/patients/search', async (req, res) => {
-  const { id, name } = req.query;
-  const where = {};
-
-  if (id) where.id = id;
-  if (name) where.name = { [Op.like]: `%${name}%` };  // 🔍 Partial match
+  app.get('/patients/search',validate(searchSchema, 'query'), async (req, res) => {
+  const { id} = req.query;
 
   try {
-    const results = await Patient.findAll({ where });
+    const results = await Patient.findOne ({ where:{id} });
     res.json(results);
   } catch (err) {
     res.status(500).json({ error: err.message });
