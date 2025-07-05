@@ -58,7 +58,7 @@
 
     <form id="searchForm">
       <input type="text" name="id" placeholder="Search by ID">
-      <input type="text" name="name" placeholder="Or by Name">
+      <!-- <input type="text" name="name" placeholder="Or by Name" value="null"> -->
       <button type="submit">Search</button>
     </form>
 
@@ -75,7 +75,7 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const params = new URLSearchParams(new FormData(form)).toString();
-      
+      console.log("param received",params);
       const statusEl = document.getElementById('status');
       statusEl.textContent = 'Searching...';
       

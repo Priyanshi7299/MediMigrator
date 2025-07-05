@@ -27,7 +27,9 @@ module.exports = (app) => {
 
   try {
     const results = await Patient.findOne ({ where:{id} });
-    res.json(results);
+    const arr = [];
+    if (results) arr.push(results);
+    res.json(arr);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
