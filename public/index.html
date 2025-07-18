@@ -9,22 +9,21 @@
   <div class="container">
     <h1>Patient Dashboard</h1>
 
-    <!-- Navigation Buttons -->
+
     <div class="nav">
       <a href="/add.html">➕ Add Patient</a>
       <a href="/visit.html">💊 Record Visit</a>
       <a href="/history.html">📜 Visit History</a>
     </div>
 
-    <!-- Search Bar -->
     <form id="searchForm">
       <input type="text" name="id" placeholder="Search by ID">
-      <!-- <input type="text" name="name" placeholder="Or by Name"> -->
+    
       <button type="submit">Search</button>
       <button type="button" id="resetBtn">Reset</button>
     </form>
 
-    <!-- Patients Table -->
+
     <table id="patientTable">
       <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Contact</th></tr></thead>
       <tbody></tbody>
@@ -77,7 +76,7 @@
       loadAllPatients(); // Restore original list
     });
 
-    // Load patients on first page load
+
     loadAllPatients();
   </script>
 </body>

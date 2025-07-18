@@ -1,9 +1,20 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('hospitalsystem', 'root', '12345678', {
-  host: 'localhost',
-  dialect: 'mysql'
+// const sequelize = new Sequelize('hospitalsystem', 'root', '12345678', {
+//   host: 'localhost',
+//   dialect: 'mysql'
+// });
+
+const sequelize = new Sequelize('hospitalsystem', 'admin', 'Root12345', {
+  host: 'patients-db.cnogwwy6u2fa.eu-north-1.rds.amazonaws.com',
+  dialect: 'mysql',
+  logging: false
 });
+
+// const sequelize = new Sequelize('hospitalsystem', 'root', 'Root@12345', {
+//   host: 'localhost',
+//   dialect: 'mysql'
+// });
 
 const db = {};
 db.Sequelize = Sequelize;
